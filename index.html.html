@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A little question 💖</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffd6e8, #fff1f7, #ffe7cc);
+      overflow: hidden;
+      color: #3b2430;
+    }
+
+    .card {
+      width: min(92vw, 520px);
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 28px;
+      padding: 34px 26px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(180, 70, 120, 0.25);
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      margin: 0 0 14px;
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .buttons, .activity-grid {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    button {
+      border: none;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    button:hover {
+      transform: scale(1.06);
+    }
+
+    .yes {
+      background: #ff4f9a;
+      color: white;
+    }
+
+    .no {
+      background: #e9e9e9;
+      color: #555;
+      position: fixed;
+      z-index: 10;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    input[type="date"] {
+      padding: 14px;
+      border-radius: 14px;
+      border: 2px solid #ff9ac8;
+      font-size: 1rem;
+      margin-top: 12px;
+      background: white;
+    }
+
+    .activity {
+      background: #fff;
+      border: 2px solid #ffc1dc;
+      color: #3b2430;
+    }
+
+    .activity.selected {
+      background: #ff4f9a;
+      color: white;
+      border-color: #ff4f9a;
+    }
+
+    .confirm {
+      background: #3b2430;
+      color: white;
+      margin-top: 24px;
+    }
+
+    .heart {
+      position: fixed;
+      font-size: 24px;
+      animation: float 6s linear infinite;
+      opacity: 0.55;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(105vh) rotate(0deg);
+      }
+      to {
+        transform: translateY(-10vh) rotate(360deg);
+      }
+    }
+
+    .final {
+      font-size: 1.15rem;
+      background: #fff5fa;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <section id="question">
+      <h1>Hi beautiful 💖</h1>
+      <p>
+        Would you like to go on a date with me after you finish your license?
+      </p>
+
+      <div class="buttons">
+        <button class="yes" onclick="showDateStep()">Yes ❤️</button>
+        <button class="no" id="noBtn">No 😢</button>
+      </div>
+    </section>
+
+    <section id="dateStep" class="hidden">
+      <h1>Yaaay! ❤️</h1>
+      <p>Choose a date between July and August:</p>
+      <input type="date" id="dateInput" min="2026-07-01" max="2026-08-31" />
+      <br />
+      <button class="yes" onclick="showActivityStep()">Next 💕</button>
+    </section>
+
+    <section id="activityStep" class="hidden">
+      <h1>What should we do? ✨</h1>
+      <p>You can choose one or more activities:</p>
+
+      <div class="activity-grid">
+        <button class="activity" onclick="toggleActivity(this)">Dinner 🍝</button>
+        <button class="activity" onclick="toggleActivity(this)">Cinema 🎬</button>
+        <button class="activity" onclick="toggleActivity(this)">Ice cream 🍦</button>
+        <button class="activity" onclick="toggleActivity(this)">Walk together 🌙</button>
+        <button class="activity" onclick="toggleActivity(this)">Picnic 🧺</button>
+        <button class="activity" onclick="toggleActivity(this)">Surprise me 🎁</button>
+      </div>
+
+      <button class="confirm" onclick="finish()">Confirm our date 💌</button>
+      <div id="finalMessage" class="final hidden"></div>
+    </section>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+
+    function moveNoButton() {
+      const padding = 20;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
+
+    noBtn.addEventListener("mouseover", moveNoButton);
+    noBtn.addEventListener("click", moveNoButton);
+    noBtn.addEventListener("touchstart", moveNoButton);
+
+    function showDateStep() {
+      document.getElementById("question").classList.add("hidden");
+      document.getElementById("dateStep").classList.remove("hidden");
+    }
+
+    function showActivityStep() {
+      const date = document.getElementById("dateInput").value;
+
+      if (!date) {
+        alert("Please choose a date first 💕");
+        return;
+      }
+
+      document.getElementById("dateStep").classList.add("hidden");
+      document.getElementById("activityStep").classList.remove("hidden");
+    }
+
+    function toggleActivity(button) {
+      button.classList.toggle("selected");
+    }
+
+    function finish() {
+      const date = document.getElementById("dateInput").value;
+      const selected = [...document.querySelectorAll(".activity.selected")]
+        .map(btn => btn.textContent.trim());
+
+      if (selected.length === 0) {
+        alert("Please choose at least one activity 💖");
+        return;
+      }
+
+      document.getElementById("finalMessage").classList.remove("hidden");
+      document.getElementById("finalMessage").innerHTML =
+        `Perfect 💖<br><br>
+        Our date is on <strong>${date}</strong>.<br>
+        Activities: <strong>${selected.join(", ")}</strong><br><br>
+        I can't wait to spend time with you.`;
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = ["💖", "💕", "💗", "💘"][Math.floor(Math.random() * 4)];
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 8000);
+    }
+
+    setInterval(createHeart, 500);
+  </script>
+</body>
+</html>
